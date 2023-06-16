@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Checkout</title>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3"></script>
+  <script src="cart.js"></script>
+  <link rel="stylesheet" href="styles/mainstyle.css">
+  <style>  
+    form {
+      width: 500px;
+      margin: 0 auto;
+      text-align: center;
+  }
+  </style>
+</head>
+<body>
+  <div th:replace="~{navbar :: navbar}"></div>
+  <h1>Замовлення</h1>
+  <form th:action="@{/order}" method="post">
+      <h2>Деталі доставки</h2>
+      <p><label>Ім'я: <input type="text" name="name"></label></p>
+      <p><label>Адреса: <input type="text" name="address"></label></p>
+
+      <!-- Add more fields as needed -->
+
+      <h2>Інформація про оплату</h2>
+      <p><label>Номер картки: <input type="text" name="cardNumber"></label></p>
+
+      <!-- Add more fields as needed -->
+      <input type="hidden" name="cart">
+      <button type="submit">Зробити замовлення</button>
+  </form>
+  <div th:replace="~{footer :: footer}"></div>
+  <script th:inline="javascript">
+    // Get the cart items from the cart.js script
+    var cartItems = cart.getItems();
+
+    // Convert the cart items to a JSON string
+    var cartItemsJson = JSON.stringify(cartItems);
+
+    // Set the value of the cart input field
+    document.querySelector('input[name="cart"]').value = cartItemsJson;
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Shopping Cart</title>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3"></script>
+  <script src="cart.js"></script>
+  <link rel="stylesheet" href="styles/mainstyle.css">
+</head>
+<body>
+  <div th:replace="~{navbar :: navbar}"></div>
+  <h1>Кошик товарів</h1>
+  <table id="cart-table">
+      <tr>
+          <th>Продукт</th>
+          <th>Ціна</th>
+          <th>Кількість</th>
+          <th>Всього (грн)</th>
+          <th></th>
+      </tr>
+  </table>
+  <div th:replace="~{footer :: footer}"></div>
+  <script>
+      function updateCartTable() {
+          var table = document.getElementById("cart-table");
+          // Remove all rows except the first one
+          while (table.rows.length > 1) {
+              table.deleteRow(1);
+          }
+          // Add a new row for each cart item
+          cart.items.forEach(function(item) {
+              var row = table.insertRow();
+              var cell = row.insertCell();
+              cell.textContent = item.product.name;
+              cell = row.insertCell();
+              cell.textContent = item.product.price;
+              cell = row.insertCell();
+              var input = document.createElement("input");
+              input.type = "number";
+              input.value = item.quantity;
+              input.min = "1";
+              input.onchange = function() {
+                  cart.update(item.productId, this.value);
+                  updateCartTable();
+              };
+              cell.appendChild(input);
+              cell = row.insertCell();
+              cell.textContent = item.product.price * item.quantity;
+              cell = row.insertCell();
+              var button = document.createElement("button");
+              button.textContent = "Видалити з кошику";
+              button.onclick = function() {
+                  cart.remove(item.productId);
+                  updateCartTable();
+              };
+              cell.appendChild(button);
+          });
+      }
+
+      updateCartTable();
+  </script>
+</body>
+</html>

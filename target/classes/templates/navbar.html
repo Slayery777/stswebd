@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Navigation Bar</title>
+    <link rel="stylesheet" href="styles/mainstyle.css">
+    <link rel="stylesheet" href="styles/navbarstyle.css">
+    <link rel="stylesheet" href="styles/mainstyle.css">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+    <div th:text="${authentication.getName()}"></div>
+    <nav th:fragment="navbar" class = "navbar">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
+        <img src="/images/icon.png" width="75">
+        <div class = "navlinks">
+        <a th:href="@{/}">Головна</a> 
+        <a th:href="@{/products}">Товари</a> 
+        <div th:if="${!#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/login}">Логін</a> 
+            <a th:href="@{/register}">Реєстрація</a>
+        </div>
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <a onclick="logout()" >Вихід</a>
+            <div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                <a th:href="@{/admin}">Панель адміністрування</a>
+            </div>
+        </div>
+        <a th:href="@{/cart}">Кошик</a> 
+        <a th:href="@{/checkout}">Замовлення</a> 
+        </div>
+        <div th:if="${authentication?.getName() != null and authentication?.getName() != 'anonymousUser'}" style="float:right;">
+            <span th:text="${authentication?.getName()}"></span>
+            <img src="/default_image.png" alt="Default Image" width="50">
+        </div>     
+        <div th:if="${authentication?.getName() == null or authentication?.getName() == 'anonymousUser'}" style="float:right;">
+            <img src="/default_image.png" alt="Default Image" width="50">
+        </div>
+        <script>
+            function logout() {
+                var form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/logout';
+                
+                var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                var csrfParameterName = document.querySelector('meta[name="_csrf_parameterName"]').getAttribute('content');
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = csrfParameterName;
+                input.value = csrfToken;
+                form.appendChild(input);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
+    </nav>
+</body>
+</html>

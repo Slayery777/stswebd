@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles/mainstyle.css">
+</head>
+<body>
+    <div th:replace="~{navbar :: navbar}"></div>
+
+    <!-- Add heading -->
+    <h1>Панель адміністрування</h1>
+
+    <!-- Form for creating new products -->
+    <h2>Створіть новий товар</h2> 
+    <form th:action="@{/admin/products}" method="post"> 
+        <!-- Add fields for name, description, and price -->
+        <label for="name">Назва:</label> 
+        <input type="text" id="name" name="name" required><br> 
+        <label for="description">Опис:</label> 
+        <input type="text" id="description" name="description" required><br> 
+        <label for="price">Ціна:</label> 
+        <input type="number" id="price" name="price" step=".01" required><br>
+
+        <!-- Add submit button -->
+        <input type="submit" value="Створити">
+    </form>
+
+    <!-- Add link to editProducts view -->
+    <a href="/admin/editproducts">Натисніть щоб редагувати наявні товари</a>
+    <div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

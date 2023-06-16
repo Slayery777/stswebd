@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="styles/mainstyle.css">
+</head>
+<body>
+    <div th:replace="~{navbar :: navbar}"></div>
+    <h1>Підтвердження замовлення</h1>
+    <p th:text="${message}"></p>
+    <div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

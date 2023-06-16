@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="styles/mainstyle.css">
+    <link rel="stylesheet" href="styles/navbarstyle.css">
+    <link rel="stylesheet" href="styles/mainstyle.css">
+</head>
+<body>
+    <div th:text="${authentication.getName()}"></div>
+    <nav th:fragment="footer" class = "footer">
+        <img src="images/icon.png" width="75">
+        <p>2023 Брус В.М.</p>
+    </nav>
+</body>
+</html>

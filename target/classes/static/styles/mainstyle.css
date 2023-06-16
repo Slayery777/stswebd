@@ -1,0 +1,51 @@
+html, body {
+    height: 100%;
+}
+
+body{
+    font-family: sans-serif;
+    width: 60%;
+    padding: auto;
+    margin: auto;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+form table tr td{
+    text-align: right;
+}
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #222c66;
+    color: white;
+    align-items: center;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.navbar img{
+    margin: 10px;
+}
+.navbar a{
+    color:white;
+    text-decoration: none;
+    margin: 10px;
+    text-align: center;
+}
+.navlinks {
+    display: flex;
+    width: 60%;
+    text-align: center;
+}
+
+.footer{
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    background-color: #222c66;
+    margin-top: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}

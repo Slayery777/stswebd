@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="styles/mainstyle.css">
+    <link rel="stylesheet" href="styles/formstyle.css">
+</head>
+<body>
+    <div th:replace="~{navbar :: navbar}"></div>
+    <h1>Реєстрація</h1>
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <table>
+            <tr>
+                <td><label for="username">Ім'я користувача:</label></td>
+                <td><input type="text" id="username" th:field="*{username}"></td>
+            </tr>
+            <tr>
+                <td><label for="password">Пароль:</label></td>
+                <td><input type="password" id="password" th:field="*{password}"></td>
+            </tr>
+            <tr>
+                <td><label for="confirmPassword">Підтвердження пароля:</label></td>
+                <td><input type="password" id="confirmPassword" th:field="*{confirmPassword}"></td>
+            </tr>
+            <tr><td><input type="submit" value="Зареєструватися"></td></tr>
+        </table>
+    </form>
+    <div th:replace="~{footer :: footer}"></div>    
+</body>
+</html>

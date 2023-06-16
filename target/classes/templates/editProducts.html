@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Редагування товарів</title>
+    <style>
+        #editModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid black;
+        }
+    </style>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" href="/styles/mainstyle.css">
+</head>
+<body>
+    <div th:replace="~{navbar :: navbar}"></div>
+    <div th:with="productsVar=${products}">
+        <table>     
+            <tr>
+                <th>ID</th>
+                <th>Назва</th>
+                <th>Опис</th>
+                <th>Ціна</th>
+                <th>Дії</th>
+            </tr>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.description}"></td>
+                <td th:text="${product.price}"></td>
+                <td>
+                    <!-- Add buttons for editing and deleting each product -->
+                    <a href="#" th:onclick="'showEditModal(' + ${product.id} + ')'">Редагувати</a> |
+                    <a href="#" th:onclick="'deleteProduct(' + ${product.id} + ')'">Видалити</a>
+                </td>
+            </tr>        
+        </table>
+    
+        <!-- Add a div to hold the modal window -->
+        <div id="editModal" style="display: none;">
+            <form id="editForm">
+                <!-- Add a hidden input field to hold the ID of the product being edited -->
+                <input type="hidden" id="editId" name="id">
+        
+                <!-- Add fields for name, description, and price -->
+                <label for="editName">Назва:</label>
+                <input type="text" id="editName" name="name" required><br>
+                <label for="editDescription">Опис:</label>
+                <input type="text" id="editDescription" name="description" required><br>
+                <label for="editPrice">Ціна:</label>
+                <input type="number" id="editPrice" name="price" step=".01" required><br>
+        
+                <!-- Add buttons for submitting or canceling the edit -->
+                <input type="submit" value="OK">
+                <input type="button" value="Cancel" onclick="hideEditModal()">
+            </form>
+        </div>
+    
+        <!-- Add some JavaScript to handle showing and hiding the modal window and updating and deleting products -->
+        <script th:inline="javascript">
+            function showEditModal(productId) {
+                // Find the product data using the productId
+                var product = findProductById(productId);
+
+                // Update the value of the hidden input field with the ID of the product being edited
+                document.getElementById("editId").value = productId;
+            
+                // Populate the form fields with the current data for the product
+                document.getElementById("editName").value = product.name;
+                document.getElementById("editDescription").value = product.description;
+                document.getElementById("editPrice").value = product.price;
+            
+                // Show the modal window
+                document.getElementById("editModal").style.display = "block";
+            }
+    
+            function hideEditModal() {
+                // Hide the modal window
+                document.getElementById("editModal").style.display = "none";
+            }
+    
+            function deleteProduct(productId) {
+                if (confirm("Are you sure you want to delete this product?")) {
+                    // Get the CSRF token and header name from the meta tags
+                    var token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                    var header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            
+                    // Send an AJAX request to your server to delete the product from the database
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/admin/products/delete");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.setRequestHeader(header, token);
+                    xhr.send(JSON.stringify({
+                        id: productId
+                    }));
+                }
+            }            
+    
+            function findProductById(productId) {
+              // Get the data for all products from the Thymeleaf local variable
+              var products = /*[[${productsVar}]]*/ [];
+            
+              // Find and return the product with the given ID
+              for (var i = 0; i < products.length; i++) {
+                  if (products[i].id === productId) {
+                      return products[i];
+                  }
+              }
+            }
+    
+            // Add an event listener to the edit form to handle form submission
+            document.getElementById("editForm").addEventListener("submit", function(event) {
+                // Prevent the default form submission behavior
+                event.preventDefault();
+
+                // Get the ID of the product being edited from the hidden input field
+                var id = document.getElementById("editId").value;
+
+                // Get the updated data from the form fields
+                var name = document.getElementById("editName").value;
+                var description = document.getElementById("editDescription").value;
+                var price = document.getElementById("editPrice").value;
+
+                // Send an AJAX request to your server to update the product in the database
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/admin/products/update?id=" + id + "&name=" + encodeURIComponent(name) + "&description=" + encodeURIComponent(description) + "&price=" + encodeURIComponent(price));
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                // Get the CSRF token from the meta tag and add it as a request header
+                var token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                var header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+                xhr.setRequestHeader(header, token);
+
+                xhr.send();
+
+                // Hide the modal window
+                hideEditModal();
+            });
+
+        </script>
+    </div>
+</body>
+</html> 
